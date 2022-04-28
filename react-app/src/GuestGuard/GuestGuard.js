@@ -1,18 +1,17 @@
-import React, { useState } from 'react'
+import React from 'react'
 import App from '../App';
 import Login from '../Login/Login';
 import useToken from './useToken';
 
 function GuestGuard() {
-    const [token, setToken] = useToken();
-    const [remember, setRemember] = useState(false);
+    const [token, setToken, resetToken] = useToken();
 
     if (!token) {
         return (
             <section className="hero is-fullheight is-light">
                 <div className="hero-body">
                     <div className="container has-text-centered">
-                        <Login setToken={setToken} setRemember={setRemember} />
+                        <Login setToken={setToken} />
                     </div>
                 </div>
             </section>
@@ -20,7 +19,7 @@ function GuestGuard() {
     }
 
     return (
-        <App logout={() => setToken(undefined, remember)} />
+        <App logout={resetToken} />
     )
 }
 

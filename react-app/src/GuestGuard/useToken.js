@@ -8,21 +8,22 @@ function useToken() {
     const [token, setToken] = useState(getToken());
 
     const saveToken = (token, remember) => {
-        if (!token) {
-            localStorage.removeItem("token");
-            sessionStorage.removeItem("token");
-        }
-
         if (remember)
             localStorage.setItem("token", token);
         else
             sessionStorage.setItem("token", token)
 
-
         setToken(token);
     };
 
-    return [token, saveToken]
+    const resetToken = () => {
+        localStorage.removeItem("token");
+        sessionStorage.removeItem("token");
+
+        setToken(undefined);
+    };
+
+    return [token, saveToken, resetToken]
 }
 
 export default useToken;

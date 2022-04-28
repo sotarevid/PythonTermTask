@@ -11,7 +11,7 @@ async function loginUser(credentials) {
         .then(response => response.ok ? response.json() : undefined)
 }
 
-function Login({ setToken, setRemember }) {
+function Login({ setToken }) {
     const [email, setEmail] = useState();
     const [password, setPassword] = useState();
     const [error, setError] = useState(false);
@@ -28,7 +28,6 @@ function Login({ setToken, setRemember }) {
         if (response === undefined)
             setError(true);
         else {
-            setRemember(remember);
             setToken(response["token"], remember);
         }
     }

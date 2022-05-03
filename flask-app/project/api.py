@@ -10,7 +10,7 @@ api = Blueprint('api', __name__)
 def register():
     body = request.get_json()
 
-    if not body or not "fullname" in body or not "email" in body or not "password" in body:
+    if not body or "fullname" not in body or "email" not in body or "password" not in body:
         return {}, 400
 
     email = body["email"]
@@ -35,7 +35,7 @@ def register():
 def login_api():
     body = request.get_json()
 
-    if not body or not "email" in body or not "password" in body:
+    if not body or "email" not in body or "password" not in body:
         return {}, 401
 
     email = body["email"]

@@ -1,5 +1,4 @@
-from email.policy import default
-from flask import Blueprint, render_template, send_file, request
+from flask import Blueprint, render_template, send_file
 from flask_login import login_required, current_user
 
 main = Blueprint('main', __name__)

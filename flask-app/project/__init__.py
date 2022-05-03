@@ -4,11 +4,11 @@ from flask_login import LoginManager
 from flask_cors import CORS
 
 db = SQLAlchemy()
+app = Flask(__name__, static_url_path='',
+            static_folder='build', template_folder='build')
 
 
 def create_app():
-    app = Flask(__name__, static_url_path='',
-                static_folder='build', template_folder='build')
     CORS(app)
 
     app.config['SECRET_KEY'] = 'fb3a921ffc6e35e8cf8630820cc3e3fe56d2a4ceac81332f'

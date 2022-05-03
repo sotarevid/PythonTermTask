@@ -1,8 +1,7 @@
-from flask_login import UserMixin
 from . import db
 
 
-class User(UserMixin, db.Model):
+class User(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     email = db.Column(db.String(100), unique=True)
     password = db.Column(db.String(100))
@@ -23,4 +22,4 @@ class AbsenceEntry(db.Model):
 
 
 class DayOff(db.Model):
-    day = db.Column(db.DateTime, primary_key=True)
+    day = db.Column(db.Date, primary_key=True)

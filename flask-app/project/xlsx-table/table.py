@@ -41,18 +41,18 @@ def add_weekends_data(weekends):
             row[0][cell].value = "В"
 
 
-def huita(n):
-    callnumber = ws["M" + str(21 + n)].value
-    bid = ws["U" + str(21 + n)].value
-    sign = ws["AA" + str(21 + n)].value
-    transcript = ws["AI" + str(21 + n)].value
-    date = ws["AL" + str(20 + n)].value
-
-    ws.merge_cells(None, 12, 22 + n, 15, 22 + n)
-    # ws.merge_cells('M22:P22')
-    ws["M" + str(22 + n)].value = callnumber
-    # ws.unmerge_cells('M21:P21')
-    ws.unmerge_cells(None, 12, 21 + n, 15, 21 + n)
+# def huita(n):
+#     callnumber = ws["M" + str(21 + n)].value
+#     bid = ws["U" + str(21 + n)].value
+#     sign = ws["AA" + str(21 + n)].value
+#     transcript = ws["AI" + str(21 + n)].value
+#     date = ws["AL" + str(20 + n)].value
+#
+#     ws.merge_cells(None, 12, 22 + n, 15, 22 + n)
+#     # ws.merge_cells('M22:P22')
+#     ws["M" + str(22 + n)].value = callnumber
+#     # ws.unmerge_cells('M21:P21')
+#     ws.unmerge_cells(None, 12, 21 + n, 15, 21 + n)
 
     # ws.merge_cells(None, 'AA', 22 + n, "AE", 22 + n)
     # ws["AA" + str(22 + n)].value = sign
@@ -75,7 +75,7 @@ def write_data_to_file(data):
     ws['AF9'].value = data[2]
     count = 0
     for s in data[0]:
-        huita(count)
+        # huita(count)
         count += 1
         ws.insert_rows(17, amount=1)
         cells = ws['A18': 'AQ18']

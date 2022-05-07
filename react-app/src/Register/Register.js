@@ -16,6 +16,9 @@ function Register() {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [fullname, setFullname] = useState("");
+    const [position, setPosition] = useState("");
+    const [salary, setSalary] = useState(1);
+    const [role, setRole] = useState("User");
     const [error, setError] = useState(false);
 
     const handleSubmit = async e => {
@@ -23,15 +26,21 @@ function Register() {
         const response = await createUser({
             email,
             password,
-            fullname
+            fullname,
+            role,
+            salary,
+            position
         });
 
         if (response === undefined)
             setError(true);
         else {
-            setEmail("")
-            setPassword("")
-            setFullname("")
+            setEmail("");
+            setPassword("");
+            setFullname("");
+            setRole("User");
+            setPosition("");
+            setSalary(1);
         }
     }
 
@@ -45,17 +54,10 @@ function Register() {
                         : null
                 }
                 <form onSubmit={handleSubmit}>
-                    <div className="field">
+                    <div className="field is-horizontal">
                         <div className="control">
                             <input className="input" type="email" name="email" placeholder="Email"
                                 onChange={e => setEmail(e.target.value)} value={email} />
-                        </div>
-                    </div>
-
-                    <div className="field">
-                        <div className="control">
-                            <input className="input" type="text" name="fullname" placeholder="Полное имя"
-                                onChange={e => setFullname(e.target.value)} value={fullname} />
                         </div>
                     </div>
 
@@ -66,7 +68,42 @@ function Register() {
                         </div>
                     </div>
 
-                    <button className="button is-block is-primary is-fullwidth">Войти</button>
+                    <div className="field">
+                        <div className="control">
+                            <div className="select is-fullwidth">
+                                <select value={role} onChange={e => setRole(e.target.value)}>
+                                    <option value="User">Пользователь</option>
+                                    <option value="Exporter">Экспорт</option>
+                                    <option value="Admin">Суперпользователь</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+                    <br />
+
+                    <div className="field">
+                        <div className="control">
+                            <input className="input" type="text" name="fullname" placeholder="Полное имя"
+                                onChange={e => setFullname(e.target.value)} value={fullname} />
+                        </div>
+                    </div>
+
+                    <div className="field">
+                        <div className="control">
+                            <input className="input" type="text" name="position" placeholder="Должность"
+                                onChange={e => setPosition(e.target.value)} value={position} />
+                        </div>
+                    </div>
+
+                    <div className="field">
+                        <div className="control">
+                            <input className="input" type="number" name="salary_multiplier" min="0.5" max="2" step="0.5" placeholder="Ставка"
+                                onChange={e => setSalary(e.target.value)} value={salary} />
+                        </div>
+                    </div>
+
+                    <button className="button is-block is-primary is-fullwidth">Зарегистрировать</button>
                 </form>
             </div>
         </div>

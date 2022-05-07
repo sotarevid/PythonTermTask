@@ -8,17 +8,19 @@ function ExportData() {
     const [selected, setSelected] = useState([])
 
     useEffect(() => {
-        fetch('http://localhost:5000/api/get_users', {
-            method: 'GET'
-        })
-            .then(res => res.json())
-            .then(res => res ? setUsers(res) : setUsers([]))
-            .then(setLoading(false))
-    }, []);
+        if (loading) {
+            fetch('http://localhost:5000/api/get_users', {
+                method: 'GET'
+            })
+                .then(res => res.json())
+                .then(setLoading(false))
+                .then(res => res ? setUsers(res) : setUsers([]))
+        }
+    }, [loading]);
 
 
     if (loading)
-        return <h1>oops</h1>
+        return <h1>Loading...</h1>
 
     function handleSelect(e) {
         if (e.target.checked)

@@ -3,6 +3,10 @@ import App from '../App';
 import Login from '../Login/Login';
 import useToken from './useToken';
 
+function getUserId() {
+    return localStorage.getItem("token") ?? sessionStorage.getItem("token");
+}
+
 function GuestGuard() {
     const [token, setToken, resetToken] = useToken();
 
@@ -23,4 +27,4 @@ function GuestGuard() {
     )
 }
 
-export default GuestGuard;
+export { GuestGuard, getUserId };

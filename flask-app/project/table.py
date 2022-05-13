@@ -1,3 +1,4 @@
+import uuid
 from openpyxl import load_workbook
 import os
 from copy import copy
@@ -117,12 +118,12 @@ def count_workdays(row):
     # Формула из ячейки АК17 =ЦЕЛОЕ(РАЗНДАТ($AF$9;$AI$9;"d")+ 1)-СЧЁТЕСЛИ(E17:AI17;"В")-AM17-AO17-AQ17
     count = 0
     for cell in range(row[0].__len__()):
-        if row[0][cell].value is None:
+        if row[0][cell].value != "В":
             count += 1
     return count
 
 
-def write_data_to_file(data, weekends, ws):
+def write_data_to_file(data, weekends, ws, month):
     """
     Write data to worksheet
 
@@ -130,7 +131,8 @@ def write_data_to_file(data, weekends, ws):
     :param weekends: list of weekends
     :param data: DB data
     """
-    ws['AF9'].value = data[2]
+    ws['AF9'].value = month
+    ws['Y9'].value = data[2]
     count = 0
     ins_rows(data[0].__len__(), ws)
     for s in data[0]:
@@ -173,12 +175,12 @@ def save_file(date, wb_template):
     :param date: the reporting date
     :return: new file
     """
-    table_filename = 'Производственный календарь {}.xlsx'.format(date)
-    wb_template.save(table_filename)
+    table_filename = '{}.xlsx'.format(uuid.uuid4())
+    wb_template.save("project/export/" + table_filename)
     return table_filename
 
 
-def generate(date=None, weekends=None, staf=None):
+def generate(date=None, weekends=None, staf=None, month=None):
     """
     Main function to create xlsx file
 
@@ -186,8 +188,8 @@ def generate(date=None, weekends=None, staf=None):
     :param weekends: list of weekends
     :param staf: list of objects from class Staf
     """
-    os.chdir(r"xlsx-table")  # переходим в текущую дерикторию иначе блядь не работает
-    wb_template = load_workbook(filename='template.xlsx')  # rename to Sample
+    wb_template = load_workbook(
+        filename='project/xlsx-table/template.xlsx')
     ws = wb_template.active
     if date is None:
         date = datetime.date(2022, 1, 1)
@@ -199,8 +201,10 @@ def generate(date=None, weekends=None, staf=None):
                 Staff('Dad', 'Papa', 2, [(12, "Б"), (13, 'Б'), (28, "ОТ"), (29, "ОТ"), (30, 'ОТ')])]
     if weekends is None:
         weekends = [1, 2, 12, 13, 20, 21, 28, 31]
+    if month is None:
+        month = date
     data = [staf, weekends, date]
-    write_data_to_file(data, weekends, ws)
+    write_data_to_file(data, weekends, ws, month)
     return save_file(date, wb_template)
 
 

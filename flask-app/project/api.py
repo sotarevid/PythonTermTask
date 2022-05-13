@@ -1,6 +1,8 @@
 import datetime
+from datetime import timedelta
 from flask import Blueprint, request, jsonify, send_file
 from werkzeug.security import generate_password_hash, check_password_hash
+from .table import Staff, generate
 from .models import AbsenceEntry, DayOff, User
 from . import db
 
@@ -86,4 +88,58 @@ def update():
 
 @api.route('/api/export', methods=['POST'])
 def export():
-    return send_file('auth.py', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
+    body = request.get_json()
+    month = body["month"] + "-01"
+    period_start = datetime.datetime.strptime(month, "%Y-%m-%d")
+    print("[EXPORT] period_start:", end="")
+    print(period_start)
+    period_end = last_day_of_month(period_start)
+    delta = timedelta(days=1)
+
+    export_data = []
+
+    for id in body["selected"]:
+        person = User.query.get(id)
+        db_entries = AbsenceEntry.query.filter((AbsenceEntry.person == person.name) & (
+            (AbsenceEntry.end_date >= period_start) | (
+                AbsenceEntry.start_date <= period_end)
+        ))
+
+        days_off = []
+
+        for db_entry in db_entries:
+            current_day = db_entry.start_date
+            while current_day <= db_entry.end_date:
+                if (current_day >= period_start and current_day <= period_end):
+                    days_off.append(
+                        (current_day.day, db_entry.absence_type_text))
+                current_day += delta
+
+        export_data.append(Staff(person.name, person.position,
+                           person.salary_multiplier, days_off))
+
+    print("[EXPORT] period_start:", end="")
+    print(period_start)
+    days_off = DayOff.query.filter(
+        (DayOff.day > period_start - delta) & (DayOff.day <= period_end)).all()
+    [print(d) for d in days_off]
+    days_off = [d.day.day for d in days_off]
+
+    month = datetime.datetime.strftime(datetime.datetime.strptime(
+        month, "%Y-%m-%d"), "%d.%m.%Y")
+
+    result_name = generate(datetime.datetime.today().strftime("%d.%m.%Y"),
+                           days_off, export_data, month)
+
+    print("[EXPORT] days_off:", end="")
+    print(days_off)
+
+    print("[EXPORT] export_data:", end="")
+    print(export_data)
+
+    return send_file('export/{}'.format(result_name), 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
+
+
+def last_day_of_month(any_day):
+    next_month = any_day.replace(day=28) + datetime.timedelta(days=4)
+    return next_month - datetime.timedelta(days=next_month.day)

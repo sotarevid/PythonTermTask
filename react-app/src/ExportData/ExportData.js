@@ -34,9 +34,9 @@ function ExportData() {
 
     function handleSelect(e) {
         if (e.target.checked)
-            setSelected([...selected, e.target.id])
+            setSelected([...selected, parseInt(e.target.id)])
         else
-            setSelected(selected.filter(x => x !== e.target.id))
+            setSelected(selected.filter(x => x !== parseInt(e.target.id)))
     }
 
     async function handlePost(e) {
@@ -74,7 +74,7 @@ function ExportData() {
                             <tr key={e["id"]}>
                                 <td>{e["name"]}</td>
                                 <td><input id={e["id"]} type="checkbox" onChange={handleSelect}
-                                    checked={selected.includes(e["id"])}></input></td>
+                                    checked={selected.includes(parseInt(e["id"]))}></input></td>
                             </tr>
                         )}
                     </tbody>

@@ -91,8 +91,6 @@ def export():
     body = request.get_json()
     month = body["month"] + "-01"
     period_start = datetime.datetime.strptime(month, "%Y-%m-%d")
-    print("[EXPORT] period_start:", end="")
-    print(period_start)
     period_end = last_day_of_month(period_start)
     delta = timedelta(days=1)
 
@@ -115,14 +113,13 @@ def export():
                         (current_day.day, db_entry.absence_type_text))
                 current_day += delta
 
-        export_data.append(Staff(person.name, person.position,
+        name = person.name.split(" ")
+        name = name[0] + " " + name[1][0] + ". " + name[2][0] + "."
+        export_data.append(Staff(name, person.position,
                            person.salary_multiplier, days_off))
 
-    print("[EXPORT] period_start:", end="")
-    print(period_start)
     days_off = DayOff.query.filter(
         (DayOff.day > period_start - delta) & (DayOff.day <= period_end)).all()
-    [print(d) for d in days_off]
     days_off = [d.day.day for d in days_off]
 
     month = datetime.datetime.strftime(datetime.datetime.strptime(
@@ -130,12 +127,6 @@ def export():
 
     result_name = generate(datetime.datetime.today().strftime("%d.%m.%Y"),
                            days_off, export_data, month)
-
-    print("[EXPORT] days_off:", end="")
-    print(days_off)
-
-    print("[EXPORT] export_data:", end="")
-    print(export_data)
 
     return send_file('export/{}'.format(result_name), 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
 

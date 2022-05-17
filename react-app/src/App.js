@@ -1,6 +1,5 @@
 import React from 'react';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
-import Home from './Home/Home';
 import Profile from './Profile/Profile';
 import ExportData from './ExportData/ExportData';
 import Navbar from './Navbar/Navbar';

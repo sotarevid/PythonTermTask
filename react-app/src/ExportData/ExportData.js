@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { saveAs } from 'file-saver'
+import { getUserRole } from '../GuestGuard/GuestGuard';
+import AccessDenied from '../Errors/AccessDenied';
 
 function GetDate() {
     var today = new Date();
@@ -18,16 +20,20 @@ function ExportData() {
     const [month, setMonth] = useState(new Date().toISOString().substring(0, 7))
 
     useEffect(() => {
-        if (loading) {
-            fetch('http://localhost:5000/api/get_users', {
-                method: 'GET'
-            })
-                .then(res => res.json())
-                .then(setLoading(false))
-                .then(res => res ? setUsers(res) : setUsers([]))
-        }
+        if (getUserRole() === "Exporter")
+            if (loading) {
+                fetch('http://localhost:5000/api/get_users', {
+                    method: 'GET'
+                })
+                    .then(res => res.json())
+                    .then(setLoading(false))
+                    .then(res => res ? setUsers(res) : setUsers([]))
+            }
     }, [loading]);
 
+    if (getUserRole() !== "Exporter") {
+        return <AccessDenied></AccessDenied>
+    }
 
     if (loading)
         return <h1>Loading...</h1>

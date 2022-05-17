@@ -1,4 +1,6 @@
 import React, { useState } from 'react'
+import { getUserRole } from '../GuestGuard/GuestGuard';
+import AccessDenied from '../Errors/AccessDenied';
 
 async function createUser(credentials) {
     return fetch('http://localhost:5000/api/register', {
@@ -42,6 +44,10 @@ function Register() {
             setPosition("");
             setSalary(1);
         }
+    }
+
+    if (getUserRole() !== "Admin") {
+        return <AccessDenied></AccessDenied>
     }
 
     return (

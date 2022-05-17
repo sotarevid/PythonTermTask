@@ -53,7 +53,7 @@ def login_api():
     if not user or not check_password_hash(user.password, password):
         return {}, 401
 
-    return {"token": user.id}, 200
+    return {"token": user.id, "role": user.role}, 200
 
 
 @api.route('/api/get_users', methods=['GET'])

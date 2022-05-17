@@ -1,5 +1,6 @@
 import React from 'react'
 import { Link, } from 'react-router-dom';
+import { getUserRole } from '../GuestGuard/GuestGuard';
 import Logout from '../GuestGuard/Logout';
 
 
@@ -11,8 +12,17 @@ function Navbar({ logout }) {
                     <div className="navbar-item">
                         <div className="buttons">
                             <Link to="/profile" className="button">Профиль</Link>
-                            <Link to="/export" className="button">Выгрузка</Link>
-                            <Link to="/register" className="button">Регистрация</Link>
+                            {
+                                getUserRole() === "Exporter"
+                                    ? <Link to="/export" className="button">Выгрузка</Link>
+                                    : null
+                            }
+                            {
+                                getUserRole() === "Admin"
+                                    ? <Link to="/register" className="button">Регистрация</Link>
+                                    : null
+                            }
+
                         </div>
                     </div>
                 </div>

@@ -1,24 +1,24 @@
 import { useState } from 'react';
 
-function useToken() {
+function useStorage(name) {
     const getToken = () => {
-        return localStorage.getItem("token") ?? sessionStorage.getItem("token");
+        return localStorage.getItem(name) ?? sessionStorage.getItem(name);
     };
 
     const [token, setToken] = useState(getToken());
 
     const saveToken = (token, remember) => {
         if (remember)
-            localStorage.setItem("token", token);
+            localStorage.setItem(name, token);
         else
-            sessionStorage.setItem("token", token)
+            sessionStorage.setItem(name, token)
 
         setToken(token);
     };
 
     const resetToken = () => {
-        localStorage.removeItem("token");
-        sessionStorage.removeItem("token");
+        localStorage.removeItem(name);
+        sessionStorage.removeItem(name);
 
         setToken(undefined);
     };
@@ -26,4 +26,4 @@ function useToken() {
     return [token, saveToken, resetToken]
 }
 
-export default useToken;
+export default useStorage;

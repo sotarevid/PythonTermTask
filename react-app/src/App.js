@@ -17,7 +17,7 @@ function App({ logout }) {
                 <div className="hero-body">
                     <div className="container has-text-centered">
                         <Routes>
-                            <Route exact path='/' element={<Home />} />
+                            <Route exact path='/' element={<Profile />} />
                             <Route path='/profile' element={<Profile />} />
                             <Route path='/export' element={<ExportData />} />
                             <Route path='/logout' element={<Logout />} />

@@ -54,7 +54,7 @@ function Register() {
                         : null
                 }
                 <form onSubmit={handleSubmit}>
-                    <div className="field is-horizontal">
+                    <div className="field">
                         <div className="control">
                             <input className="input" type="email" name="email" placeholder="Email"
                                 onChange={e => setEmail(e.target.value)} value={email} />

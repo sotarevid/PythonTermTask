@@ -10,7 +10,6 @@ function Navbar({ logout }) {
                 <div className="navbar-start">
                     <div className="navbar-item">
                         <div className="buttons">
-                            <Link to="/" className="button">Главная</Link>
                             <Link to="/profile" className="button">Профиль</Link>
                             <Link to="/export" className="button">Выгрузка</Link>
                             <Link to="/register" className="button">Регистрация</Link>

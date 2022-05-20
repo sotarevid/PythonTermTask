@@ -72,13 +72,10 @@ def update():
     end_date = datetime.datetime.strptime(body["end"], "%Y-%m-%d")
     type = body["type"]
 
-    text_type = "ОТ" if type == "Holiday" else "Б"
-    number_type = "09" if type == "Holiday" else "19"
-
     person = User.query.filter_by(id=id).first().name
     absence = AbsenceEntry(person=person, start_date=start_date,
-                           end_date=end_date, absence_type_text=text_type,
-                           absence_type_number=number_type)
+                           end_date=end_date, absence_type_text=type,
+                           absence_type_number=0)
 
     db.session.add(absence)
     db.session.commit()

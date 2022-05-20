@@ -1,5 +1,6 @@
 import React, { useState } from 'react'
 import { getUserId } from '../GuestGuard/GuestGuard';
+import getDayOffTypes from '../Utils/getDayOffTypes';
 
 async function sendData(data) {
     return fetch('http://localhost:5000/api/update', {
@@ -17,7 +18,8 @@ function Profile() {
     const [error, setError] = useState(false);
     const [start, setStart] = useState(new Date().toISOString().substring(0, 10));
     const [end, setEnd] = useState(new Date().toISOString().substring(0, 10));
-    const [type, setType] = useState("Sick");
+    const [type, setType] = useState("Б");
+    const [types, setTypes] = useState(getDayOffTypes().slice(0, 5));
 
     const handleSubmit = async e => {
         e.preventDefault();
@@ -37,8 +39,18 @@ function Profile() {
         }
     }
 
+    const handleSelect = (e) => {
+        e.preventDefault();
+        if (e.target.value === "more") {
+            setTypes(getDayOffTypes());
+        }
+        else {
+            setType(e.target.value);
+        }
+    }
+
     return (
-        <div className="column is-4 is-offset-4">
+        <div className="column is-6 is-offset-3">
             <h3 className="title">Заполнить информацию</h3>
             <div className="box">
                 {
@@ -68,9 +80,17 @@ function Profile() {
                     <div className="field">
                         <div className="control">
                             <div className="select is-fullwidth">
-                                <select value={type} onChange={e => setType(e.target.value)}>
-                                    <option value="Holiday">Отпуск</option>
-                                    <option value="Sick">Больничный</option>
+                                <select autoComplete='on' value={type} onChange={handleSelect}>
+                                    {
+                                        types.map(dayOffType =>
+                                            <option key={dayOffType.type} value={dayOffType.type}>{dayOffType.text}</option>
+                                        )
+                                    }
+                                    {
+                                        types.length === 5
+                                            ? <option value="more">Показать все</option>
+                                            : null
+                                    }
                                 </select>
                             </div>
                         </div>

@@ -156,9 +156,11 @@ def fill_absence_reasons(ws, row, count):
         causes_count = list(dict(causes_counter).values())
         causes_code = list(dict(causes_counter).keys())
         ws["AN" + str(16 + count)].value = causes_code[0]
-        ws["AP" + str(16 + count)].value = causes_code[1]
+        if (causes_code.__len__() > 1):
+            ws["AP" + str(16 + count)].value = causes_code[1]
         ws["AO" + str(16 + count)].value = causes_count[0]
-        ws["AQ" + str(16 + count)].value = causes_count[1]
+        if (causes_count.__len__() > 1):
+            ws["AQ" + str(16 + count)].value = causes_count[1]
 
 
 def write_data_to_file(data, weekends, ws, month):

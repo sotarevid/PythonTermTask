@@ -2,6 +2,7 @@ from openpyxl import load_workbook
 import os
 from copy import copy
 import datetime
+from collections import Counter
 
 
 class Staff:
@@ -122,6 +123,43 @@ def count_workdays(row):
     return count
 
 
+def find_causes(row):
+    """
+    Find reasons for absence.
+
+    :param row:row of user workdays
+    :return: list of causes
+    """
+    causes = []
+    for cell in range(row[0].__len__()):
+        if (row[0][cell].value != "ОТ") & (row[0][cell].value != "В") & (row[0][cell].value != "Б") & (
+                row[0][cell].value is not None):
+            causes.append(row[0][cell].value)
+    return causes
+
+
+def fill_absence_reasons(ws, row, count):
+    """
+    Fills absence reasons
+
+    :param ws: worksheet
+    :param row:row of user workdays
+    :param count: num of current line
+    :return:
+    """
+    causes = find_causes(row)
+    causes_counter = Counter(causes)
+    if causes_counter.__len__() == 0:
+        pass
+    else:
+        causes_count = list(dict(causes_counter).values())
+        causes_code = list(dict(causes_counter).keys())
+        ws["AN" + str(16 + count)].value = causes_code[0]
+        ws["AP" + str(16 + count)].value = causes_code[1]
+        ws["AO" + str(16 + count)].value = causes_count[0]
+        ws["AQ" + str(16 + count)].value = causes_count[1]
+
+
 def write_data_to_file(data, weekends, ws):
     """
     Write data to worksheet
@@ -144,6 +182,7 @@ def write_data_to_file(data, weekends, ws):
         add_weekends_data(row, weekends, ws)
         ws["AJ" + str(16 + count)].value = "01"
         ws["AK" + str(16 + count)].value = count_workdays(row)
+        fill_absence_reasons(ws, row, count)
 
 
 def cell_style(cells, new_cells):
@@ -192,11 +231,14 @@ def generate(date=None, weekends=None, staf=None):
     if date is None:
         date = datetime.date(2022, 1, 1)
     if staf is None:
-        staf = [Staff('Dick', 'Big', 0.5, [(2, "ОТ"), (3, 'ОТ'), (4, "ОТ"), (25, "Б")]),
-                Staff('Lol', 'kek', 1, [
-                      (2, "Б"), (5, 'ОТ'), (6, "ОТ"), (27, "Б")]),
-                Staff('Yaga', 'Baba', 0.33, [(3, "ОТ"), (5, 'ОТ'), (9, "Б")]),
-                Staff('Dad', 'Papa', 2, [(12, "Б"), (13, 'Б'), (28, "ОТ"), (29, "ОТ"), (30, 'ОТ')])]
+        staf = [
+            Staff('Dick', 'Big', 0.5, [(2, "ОТ"), (3, 'ОТ'), (4, "ОТ"), (25, "Б"), (14, "Гы"), (15, 'Гы'), (17, 'ЗЩ')]),
+            Staff('Lol', 'kek', 1, [
+                (2, "Б"), (5, 'ОТ'), (6, "ОТ"), (27, "Б")]),
+            Staff('Yaga', 'Baba', 0.33,
+                  [(3, "ОТ"), (5, 'ОТ'), (9, "Б"), (22, "РР"), (23, "ТТ"), (26, "ТТ"), (27, 'РР')]),
+            Staff('Dad', 'Papa', 2,
+                  [(12, "Б"), (13, 'Б'), (22, "РР"), (23, "II"), (24, "NN"), (28, "ОТ"), (29, "ОТ"), (30, 'ОТ')])]
     if weekends is None:
         weekends = [1, 2, 12, 13, 20, 21, 28, 31]
     data = [staf, weekends, date]

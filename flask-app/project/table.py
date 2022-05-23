@@ -3,6 +3,7 @@ from openpyxl import load_workbook
 import os
 from copy import copy
 import datetime
+from collections import Counter
 
 
 class Staff:
@@ -118,9 +119,46 @@ def count_workdays(row):
     # Формула из ячейки АК17 =ЦЕЛОЕ(РАЗНДАТ($AF$9;$AI$9;"d")+ 1)-СЧЁТЕСЛИ(E17:AI17;"В")-AM17-AO17-AQ17
     count = 0
     for cell in range(row[0].__len__()):
-        if row[0][cell].value != "В":
+        if row[0][cell].value is None:
             count += 1
     return count
+
+
+def find_causes(row):
+    """
+    Find reasons for absence.
+
+    :param row:row of user workdays
+    :return: list of causes
+    """
+    causes = []
+    for cell in range(row[0].__len__()):
+        if (row[0][cell].value != "ОТ") & (row[0][cell].value != "В") & (row[0][cell].value != "Б") & (
+                row[0][cell].value is not None):
+            causes.append(row[0][cell].value)
+    return causes
+
+
+def fill_absence_reasons(ws, row, count):
+    """
+    Fills absence reasons
+
+    :param ws: worksheet
+    :param row:row of user workdays
+    :param count: num of current line
+    :return:
+    """
+    causes = find_causes(row)
+    causes_counter = Counter(causes)
+    if causes_counter.__len__() == 0:
+        pass
+    else:
+        causes_count = list(dict(causes_counter).values())
+        causes_code = list(dict(causes_counter).keys())
+        ws["AN" + str(16 + count)].value = causes_code[0]
+        ws["AP" + str(16 + count)].value = causes_code[1]
+        ws["AO" + str(16 + count)].value = causes_count[0]
+        ws["AQ" + str(16 + count)].value = causes_count[1]
 
 
 def write_data_to_file(data, weekends, ws, month):
@@ -146,6 +184,7 @@ def write_data_to_file(data, weekends, ws, month):
         add_weekends_data(row, weekends, ws)
         ws["AJ" + str(16 + count)].value = "01"
         ws["AK" + str(16 + count)].value = count_workdays(row)
+        fill_absence_reasons(ws, row, count)
 
 
 def cell_style(cells, new_cells):

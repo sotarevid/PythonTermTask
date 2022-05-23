@@ -232,7 +232,8 @@ def generate(date=None, weekends=None, staf=None):
         date = datetime.date(2022, 1, 1)
     if staf is None:
         staf = [
-            Staff('Dick', 'Big', 0.5, [(2, "ОТ"), (3, 'ОТ'), (4, "ОТ"), (25, "Б"), (14, "Гы"), (15, 'Гы'), (17, 'ЗЩ')]),
+            Staff('Dick', 'Big', 0.5, [
+                  (2, "ОТ"), (3, 'ОТ'), (4, "ОТ"), (25, "Б"), (14, "Гы"), (15, 'Гы'), (17, 'ЗЩ')]),
             Staff('Lol', 'kek', 1, [
                 (2, "Б"), (5, 'ОТ'), (6, "ОТ"), (27, "Б")]),
             Staff('Yaga', 'Baba', 0.33,
